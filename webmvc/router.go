@@ -10,6 +10,16 @@ type Routes struct {
 	routes map[string]base.ControllerInterface
 }
 
+func CreateNewRouter() *Routes {
+	return &Routes{
+		map[string]base.ControllerInterface{},
+	}
+}
+
 func (r *Routes) GetController(path string) base.ControllerInterface {
 	return r.routes[path]
+}
+
+func (r *Routes) RegisterRoute(path string, controller base.ControllerInterface) {
+	r.routes[path] = controller
 }

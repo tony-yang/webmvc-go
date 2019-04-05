@@ -1,4 +1,4 @@
-package webmvc
+package base
 
 import (
 	"log"

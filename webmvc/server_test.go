@@ -5,76 +5,41 @@ import (
 	"net/http/httptest"
 	"testing"
 	"webmvc/base"
-	"webmvc/controllers"
+	"webmvc/tester"
 )
 
 func TestServerHello(t *testing.T) {
-	routes := Routes{
-		map[string]base.ControllerInterface{
-			"/index": &controllers.Index{},
-			"/hello": &controllers.Hello{},
-			"/base":  &base.Controller{},
-		},
-	}
+	server := CreateNewServer()
 
-	server := &NewServer{&routes}
-
-	t.Run("return Hello Webmvc from index", func(t *testing.T) {
-		request, _ := http.NewRequest(http.MethodGet, "/index", nil)
-		response := httptest.NewRecorder()
-
-		server.ServeHTTP(response, request)
-
-		got := response.Body.String()
-		want := "Hello Webmvc from Go"
-		AssertStringEqual(t, got, want)
-
-		gotCode := response.Code
-		wantCode := http.StatusOK
-		AssertIntEqual(t, gotCode, wantCode)
-	})
-
-	t.Run("return Hello World from hello", func(t *testing.T) {
-		request, _ := http.NewRequest(http.MethodGet, "/hello", nil)
-		response := httptest.NewRecorder()
-
-		server.ServeHTTP(response, request)
-
-		got := response.Body.String()
-		want := "Hello World!"
-		AssertStringEqual(t, got, want)
-
-		gotCode := response.Code
-		wantCode := http.StatusOK
-		AssertIntEqual(t, gotCode, wantCode)
-	})
-
-	t.Run("base controller should return 405 with Method not allowed", func(t *testing.T) {
+	t.Run("controller with non-pre-defined HTTP code should return method not allowed", func(t *testing.T) {
 		request, _ := http.NewRequest(http.MethodGet, "/base", nil)
 		response := httptest.NewRecorder()
 
 		server.ServeHTTP(response, request)
 
 		got := response.Body.String()
-		want := "Method not allowed\n"
-		AssertStringEqual(t, got, want)
+		want := "Method Not Allowed"
+		tester.AssertStringEqual(t, got, want)
 
 		gotCode := response.Code
 		wantCode := 405
-		AssertIntEqual(t, gotCode, wantCode)
+		tester.AssertIntEqual(t, gotCode, wantCode)
 	})
-}
 
-func AssertStringEqual(t *testing.T, got, want string) {
-	t.Helper()
-	if got != want {
-		t.Errorf("got string '%s', want '%s'", got, want)
-	}
-}
+	t.Run("base controller should return 405 with method not allowed", func(t *testing.T) {
+		server.Routes.RegisterRoute("/base", &base.Controller{})
 
-func AssertIntEqual(t *testing.T, got, want int) {
-	t.Helper()
-	if got != want {
-		t.Errorf("got int '%d', want '%d'", got, want)
-	}
+		request, _ := http.NewRequest(http.MethodGet, "/base", nil)
+		response := httptest.NewRecorder()
+
+		server.ServeHTTP(response, request)
+
+		got := response.Body.String()
+		want := "Method Not Allowed"
+		tester.AssertStringEqual(t, got, want)
+
+		gotCode := response.Code
+		wantCode := 405
+		tester.AssertIntEqual(t, gotCode, wantCode)
+	})
 }
