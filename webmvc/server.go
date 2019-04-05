@@ -9,7 +9,7 @@ import (
 // NewServer creates a new server instance and is the entry serving point
 // of the framework
 type NewServer struct {
-	Routes *Routes
+	Routes *base.Routes
 }
 
 func (s *NewServer) ServeHTTP(w http.ResponseWriter, r *http.Request) {
@@ -31,7 +31,7 @@ func (s *NewServer) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 }
 
 func CreateNewServer() *NewServer {
-	routes := CreateNewRouter()
+	routes := base.CreateNewRouter()
 	server := &NewServer{routes}
 	return server
 }

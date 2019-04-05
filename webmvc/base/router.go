@@ -1,25 +1,24 @@
-package webmvc
+package base
 
 import (
-	"webmvc/base"
 )
 
 // Routes create the route controller mapping and routes the traffic to
 // the corresponding controller for further processing
 type Routes struct {
-	routes map[string]base.ControllerInterface
+	routes map[string]ControllerInterface
 }
 
 func CreateNewRouter() *Routes {
 	return &Routes{
-		map[string]base.ControllerInterface{},
+		map[string]ControllerInterface{},
 	}
 }
 
-func (r *Routes) GetController(path string) base.ControllerInterface {
+func (r *Routes) GetController(path string) ControllerInterface {
 	return r.routes[path]
 }
 
-func (r *Routes) RegisterRoute(path string, controller base.ControllerInterface) {
+func (r *Routes) RegisterRoute(path string, controller ControllerInterface) {
 	r.routes[path] = controller
 }
