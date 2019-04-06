@@ -1,7 +1,6 @@
 package base
 
-import (
-)
+import ()
 
 // Routes create the route controller mapping and routes the traffic to
 // the corresponding controller for further processing

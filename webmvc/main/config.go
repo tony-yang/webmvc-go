@@ -1,12 +1,12 @@
 package main
 
 import (
-  "webmvc"
-  "webmvc/controllers"
+	"webmvc"
+	"webmvc/controllers"
 )
 
 // ConfigRoutes configures the routes with the corresponding controller
 func ConfigRoutes(s *webmvc.NewServer) {
-  s.Routes.RegisterRoute("/index", &controllers.Index{})
-  s.Routes.RegisterRoute("/hello", &controllers.Hello{})
+	s.Routes.RegisterRoute("/index", &controllers.Index{})
+	s.Routes.RegisterRoute("/hello", &controllers.Hello{})
 }

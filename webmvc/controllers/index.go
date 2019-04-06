@@ -1,14 +1,16 @@
 package controllers
 
 import (
-  "webmvc/base"
+	"webmvc/base"
 )
 
-type Index struct {}
+type Index struct {
+	base.Controller
+}
 
 func (index *Index) Get() *base.HttpResponse {
-  return &base.HttpResponse{
-    Body: "Hello Webmvc from Go",
-    StatusCode: 200,
-  }
+	return &base.HttpResponse{
+		Body:       "Hello Webmvc from Go",
+		StatusCode: 200,
+	}
 }
