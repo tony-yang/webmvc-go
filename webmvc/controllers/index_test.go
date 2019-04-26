@@ -1,16 +1,17 @@
-package controllers
+package controllers_test
 
 import (
 	"net/http"
 	"net/http/httptest"
 	"testing"
 	"webmvc"
+	"webmvc/controllers"
 	"webmvc/tester"
 )
 
 func TestIndex(t *testing.T) {
 	server := webmvc.CreateNewServer()
-	server.Routes.RegisterRoute("/index", &Index{})
+	server.Routes.RegisterRoute("/index", &controllers.Index{})
 
 	t.Run("return Hello Webmvc from index", func(t *testing.T) {
 		request, _ := http.NewRequest(http.MethodGet, "/index", nil)

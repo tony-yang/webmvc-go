@@ -14,11 +14,11 @@ type NewServer struct {
 
 func (s *NewServer) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	requestPath := r.URL.Path
-	controller := s.Routes.GetController(requestPath)
-
-	if controller != nil {
+	if s.Routes.Exists(requestPath) {
+		controller, params := s.Routes.GetController(requestPath)
 		base.Debug("Request path = ", requestPath)
 		base.Debug("Controller = ", controller)
+		base.Debug("Params = ", params)
 		var response *base.HttpResponse
 		switch r.Method {
 		case http.MethodGet:
@@ -39,7 +39,7 @@ func (s *NewServer) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 			http.Error(w, response.Body, response.StatusCode)
 		}
 	} else {
-		http.Error(w, "Method Not Allowed", 405)
+		http.Error(w, "Not Found", 404)
 	}
 }
 

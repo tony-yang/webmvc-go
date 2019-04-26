@@ -1,16 +1,17 @@
-package controllers
+package controllers_test
 
 import (
 	"net/http"
 	"net/http/httptest"
 	"testing"
 	"webmvc"
+	"webmvc/controllers"
 	"webmvc/tester"
 )
 
 func TestHello(t *testing.T) {
 	server := webmvc.CreateNewServer()
-	server.Routes.RegisterRoute("/hello", &Hello{})
+	server.Routes.RegisterRoute("/hello", &controllers.Hello{})
 
 	t.Run("return Hello World from hello", func(t *testing.T) {
 		request, _ := http.NewRequest(http.MethodGet, "/hello", nil)

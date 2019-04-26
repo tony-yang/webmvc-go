@@ -1,6 +1,8 @@
 package base
 
-import ()
+import (
+	"strings"
+)
 
 // Routes create the route controller mapping and routes the traffic to
 // the corresponding controller for further processing
@@ -14,10 +16,29 @@ func CreateNewRouter() *Routes {
 	}
 }
 
-func (r *Routes) GetController(path string) ControllerInterface {
-	return r.routes[path]
+func (r *Routes) Exists(path string) bool {
+	resources := strings.Split(path, "/")[1:]
+	controllerPath := "/" + resources[0]
+
+	if _, ok := r.routes[controllerPath]; ok {
+		return true
+	}
+	return false
+}
+
+func (r *Routes) GetController(path string) (ControllerInterface, string) {
+	resources := strings.Split(path, "/")[1:]
+	controllerPath := "/" + resources[0]
+	if len(resources) > 1 {
+		params := strings.Join(resources[1:], "/")
+		return r.routes[controllerPath], params
+	} else {
+		return r.routes[controllerPath], ""
+	}
 }
 
 func (r *Routes) RegisterRoute(path string, controller ControllerInterface) {
-	r.routes[path] = controller
+	resources := strings.Split(path, "/")[1:]
+	controllerPath := "/" + resources[0]
+	r.routes[controllerPath] = controller
 }

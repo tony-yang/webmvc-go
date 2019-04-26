@@ -1,26 +1,26 @@
-package webmvc
+package webmvc_test
 
 import (
 	"net/http"
 	"net/http/httptest"
 	"testing"
+	"webmvc"
 	"webmvc/base"
 	"webmvc/tester"
 )
 
 func TestServer(t *testing.T) {
-	server := CreateNewServer()
+	server := webmvc.CreateNewServer()
 
 	t.Run("GET base controller with non-pre-defined HTTP code should return method not allowed", func(t *testing.T) {
 		request, _ := http.NewRequest(http.MethodGet, "/base", nil)
 		response := httptest.NewRecorder()
 
 		server.ServeHTTP(response, request)
-
 		got := response.Body.String()
-		want := "Method Not Allowed"
+		want := "Not Found"
 		tester.AssertStringEqual(t, got, want)
-		tester.AssertIntEqual(t, response.Code, 405)
+		tester.AssertIntEqual(t, response.Code, 404)
 	})
 
 	t.Run("GET base controller should return 405 with method not allowed", func(t *testing.T) {
