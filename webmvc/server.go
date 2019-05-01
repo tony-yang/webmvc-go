@@ -3,6 +3,7 @@ package webmvc
 import (
 	"fmt"
 	"net/http"
+	"strings"
 	"webmvc/base"
 )
 
@@ -12,25 +13,37 @@ type NewServer struct {
 	Routes *base.Routes
 }
 
+func buildQueries(rawQueries string) map[string]string {
+	requestQueries := strings.Split(rawQueries, "&")
+
+	queries := make(map[string]string)
+	if requestQueries[0] != "" && len(requestQueries) > 0 {
+		for _, query := range requestQueries {
+			queryStreams := strings.Split(query, "=")
+			for i := 0; i < len(queryStreams); i += 2 {
+				queries[queryStreams[i]] = queryStreams[i+1]
+			}
+		}
+	}
+	return queries
+}
+
 func (s *NewServer) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	requestPath := r.URL.Path
+	queries := buildQueries(r.URL.RawQuery)
+
 	if s.Routes.Exists(requestPath) {
-		controller, params := s.Routes.GetController(requestPath)
-		base.Debug("Request path = ", requestPath)
-		base.Debug("Controller = ", controller)
-		base.Debug("Params = ", params)
+		controller, subpath := s.Routes.GetController(requestPath)
 		var response *base.HttpResponse
 		switch r.Method {
-		case http.MethodGet:
-			response = controller.Get()
 		case http.MethodPost:
-			response = controller.Post()
+			response = controller.Post(subpath, queries)
 		case http.MethodPut:
-			response = controller.Put()
+			response = controller.Put(subpath, queries)
 		case http.MethodDelete:
-			response = controller.Delete()
-		default:
-			response = controller.Get()
+			response = controller.Delete(subpath, queries)
+		default: // include http.MethodGet
+			response = controller.Get(subpath, queries)
 		}
 
 		if response.StatusCode == 200 {

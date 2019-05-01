@@ -30,8 +30,8 @@ func (r *Routes) GetController(path string) (ControllerInterface, string) {
 	resources := strings.Split(path, "/")[1:]
 	controllerPath := "/" + resources[0]
 	if len(resources) > 1 {
-		params := strings.Join(resources[1:], "/")
-		return r.routes[controllerPath], params
+		subpath := strings.Join(resources[1:], "/")
+		return r.routes[controllerPath], subpath
 	} else {
 		return r.routes[controllerPath], ""
 	}

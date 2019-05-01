@@ -9,10 +9,10 @@ import (
 var routes *base.Routes
 
 func setupSubTest(t *testing.T) func(t *testing.T) {
-	t.Log("Setup Sub Test")
+	t.Log("## Setup Sub Test")
 	routes = base.CreateNewRouter()
 	return func(t *testing.T) {
-		t.Log("#### Teardown Sub Test")
+		t.Log("## Teardown Sub Test")
 	}
 }
 
